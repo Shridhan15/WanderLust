@@ -4,7 +4,7 @@
   <div class="col-8 offset-2">
     <h3>Create a new listing</h3>
     <br /><br />
-    <form method="POST" action="/listings"  novalidate class="needs-validation" >
+    <form method="POST" action="/listings" novalidate class="needs-validation">
       <div class="mb-3">
         <label for="'title" class="form-label">Title</label>
         <input
@@ -14,6 +14,8 @@
           class="form-control"
           required
         />
+        <!-- below text will appear if success -->
+        <div class="valid-feedback">Title looks good</div>
       </div>
 
       <div class="mb-3">
@@ -24,6 +26,7 @@
           type="text"
           name="listing[description]"
         ></textarea>
+        <div class="invalid-feedback">Please enter short description</div>
       </div>
 
       <div class="mb-3">
@@ -41,11 +44,11 @@
           <label for="price" class="form-label">Price</label>
           <input
             required
-            type="number"
             name="listing[price]"
             placeholder="enter price"
             class="form-control"
           />
+          <div class="invalid-feedback">Please enter price</div>
         </div>
 
         <div class="mb-3 col-md-8">
@@ -57,6 +60,7 @@
             placeholder="enter country"
             class="form-control"
           />
+          <div class="invalid-feedback">Please enter Country name</div>
         </div>
       </div>
 
@@ -69,6 +73,7 @@
           placeholder="enter location"
           class="form-control"
         />
+        <div class="invalid-feedback">Please enter location</div>
       </div>
       <button class="btn btn-dark add-btn mt-3">Add</button>
     </form>
