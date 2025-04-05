@@ -7,7 +7,7 @@ const methodOverrride = require("method-override");
 const ejsMate = require("ejs-mate");//helps in creating layout (boilderplate)
 const wrapAsync = require('./utils/wrapAsync.js')
 const ExpressError = require('./utils/ExpressError.js')
-const { listingSchema,reviewSchema } = require('./schema.js')
+const { listingSchema, reviewSchema } = require('./schema.js')
 const Review = require("./models/review.js")
 
 
@@ -75,7 +75,8 @@ app.get("/listings/new", (req, res) => {
 //show route
 app.get("/listings/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("reviews");
+    //populate method is used to sent review object
     res.render("listings/show.ejs", { listing })
 
 
@@ -134,6 +135,16 @@ app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => 
     await listing.save();
     console.log("new review saved");
     res.redirect(`/listings/${listing._id}`)
+}))
+
+//delete review route
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
+    let { id, reviewId } = req.params
+    //mongo pull operator- removes from an existing array all  instances of a value or values  
+
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } })// remove reviewId(review) from review array of listing
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`)
 }))
 
 
