@@ -38,9 +38,9 @@
         <label for="image" class="form-label">Image URL/Link</label>
 
         <input
-          name="image"
-          type="listing[text]"
-          value="<%= listing.image %>"
+          name="listing[image]"
+          type="text"
+          value=" <%= listing.image?.url || listing.image %> %>"
           class="form-control"
           required
         />
