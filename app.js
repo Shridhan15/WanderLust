@@ -7,9 +7,13 @@ const ejsMate = require("ejs-mate");//helps in creating layout (boilderplate)
 const ExpressError = require('./utils/ExpressError.js')
 const session = require('express-session')
 const flash = require('connect-flash')
+const passport=require('passport')
+const LocalStratergy=require('passport-local')
+const User=require('./models/user.js')
 
-const listings = require('./routes/listing.js')
-const reviews = require('./routes/review.js')
+const listingsRouter = require('./routes/listing.js')
+const reviewsRouter = require('./routes/review.js')
+const userRouter = require('./routes/user.js')
 
 app.use(methodOverrride("_method"));
 app.set("view engine", "ejs");
@@ -45,15 +49,38 @@ app.get("/", (req, res) => {
 app.use(session(sessionOptions))//to check if session is working, inspect and look for connect.side in application 
 app.use(flash())
 
+// *password use session also
+app.use(passport.initialize())//middleware to init passport
+app.use(passport.session())//we want to have user to stay logged in for a session, he need not log in again and again for a request
+passport.use(new LocalStratergy(User.authenticate()))
+
+passport.serializeUser(User.serializeUser())//store user's info in session while he login, to avoid login again and again 
+passport.deserializeUser(User.deserializeUser())
+
+
 app.use((req, res, next) => {
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
-    console.log(res.locals.success)
+    // console.log(res.locals.success)
     next();
 })
 
-app.use('/listings', listings)
-app.use('/listings/:id/reviews', reviews)
+
+// app.get("/demouser",async (req, res) => {
+//     let fakeuser= new User({
+//         email:"student@gmail.com",
+//         username:"delta-user",//username is added by passport
+//     })
+
+//     let registeredUser= await User.register(fakeuser,"helloworld")//passing user and password 
+//     //register is a predefined method to register user 
+//     res.send(registeredUser)
+// })
+
+
+app.use('/listings', listingsRouter)
+app.use('/listings/:id/reviews', reviewsRouter)
+app.use('/',userRouter)
 
 
 //it matche with all routes if not found it thows this error
