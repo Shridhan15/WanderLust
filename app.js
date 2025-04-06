@@ -5,7 +5,8 @@ const path = require("path");
 const methodOverrride = require("method-override");
 const ejsMate = require("ejs-mate");//helps in creating layout (boilderplate)
 const ExpressError = require('./utils/ExpressError.js')
-
+const session = require('express-session')
+const flash = require('connect-flash')
 
 const listings = require('./routes/listing.js')
 const reviews = require('./routes/review.js')
@@ -27,8 +28,28 @@ async function main() {
     await mongoose.connect(MONGO_URL)
 }
 
+const sessionOptions = {
+    secret: "mysupersecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,//this is in miliseconds
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    }
+};
 app.get("/", (req, res) => {
-    res.send("working")
+    res.send("Hii, i an root")
+})
+
+app.use(session(sessionOptions))//to check if session is working, inspect and look for connect.side in application 
+app.use(flash())
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success")
+    res.locals.error = req.flash("error")
+    console.log(res.locals.success)
+    next();
 })
 
 app.use('/listings', listings)
