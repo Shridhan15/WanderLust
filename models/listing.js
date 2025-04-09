@@ -9,11 +9,8 @@ const listingSchema = new Schema({
     },
     description: String,
     image: {
+        url: String,
         filename: String,
-        url: {
-            type: String,
-            default: "https://s3.india.com/wp-content/uploads/2024/03/Feature-Image_-Goa-1.jpg",
-        },
     },
     price: Number,
     location: String,

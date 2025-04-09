@@ -30,10 +30,12 @@ module.exports.createListing=async (req, res, next) => {
     //     throw new ExpressError(400, "Send valid data for listing")
     // }
     //earlierly we were using above method to validate but we had to do that for every key(price,location etc), middleware is better way using Joi
-
+    let url=req.file.path;
+    let filename=req.file.filename;
     const newlisting = Listing(req.body.listing);
     // console.log("This is new listing", koreq.user._id)
     newlisting.owner = req.user._id;//store userid as owner (current logged in user) using passport
+    newlisting.image={url,filename}
     await newlisting.save();
     req.flash("success", "New listing created")
     res.redirect("/listings")

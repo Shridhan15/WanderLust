@@ -4,7 +4,14 @@
   <div class="col-8 offset-2">
     <h3>Create a new listing</h3>
     <br /><br />
-    <form method="POST" action="/listings" novalidate class="needs-validation">
+    <!-- bydefault forms are not capable to send files to backen, to make this possible use enctype- from-data -->
+    <form
+      method="POST"
+      action="/listings"
+      novalidate
+      class="needs-validation"
+      enctype="multipart/form-data"
+    >
       <div class="mb-3">
         <label for="'title" class="form-label">Title</label>
         <input
@@ -29,13 +36,13 @@
         <div class="invalid-feedback">Please enter short description</div>
       </div>
 
+  
       <div class="mb-3">
-        <label for="'image" class="form-label">Image Link</label>
+        <label for="'image" class="form-label">Upload Listing Image</label>
         <input
           name="listing[image]"
-          type="text"
+          type="file"
           class="form-control"
-          placeholder="enter url/link"
         />
       </div>
 

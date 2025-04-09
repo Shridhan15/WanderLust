@@ -1,4 +1,6 @@
 const express = require("express");
+require('dotenv').config();
+
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
@@ -7,9 +9,9 @@ const ejsMate = require("ejs-mate");//helps in creating layout (boilderplate)
 const ExpressError = require('./utils/ExpressError.js')
 const session = require('express-session')
 const flash = require('connect-flash')
-const passport=require('passport')
-const LocalStratergy=require('passport-local')
-const User=require('./models/user.js')
+const passport = require('passport')
+const LocalStratergy = require('passport-local')
+const User = require('./models/user.js')
 
 const listingsRouter = require('./routes/listing.js')
 const reviewsRouter = require('./routes/review.js')
@@ -81,7 +83,7 @@ app.use((req, res, next) => {
 
 app.use('/listings', listingsRouter)
 app.use('/listings/:id/reviews', reviewsRouter)
-app.use('/',userRouter)
+app.use('/', userRouter)
 
 
 //it matche with all routes if not found it thows this error
