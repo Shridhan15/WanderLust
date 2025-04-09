@@ -4,108 +4,24 @@ const wrapAsync = require('../utils/wrapAsync.js')
 
 const Listing = require("../models/listing.js")
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js")
+const listingControlller = require("../controllers/listing.js")
 
-
-//Index route
-router.get("/", wrapAsync(async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings })
-}))
+//we combine routes with common path
+router.route('/')
+    .get(wrapAsync(listingControlller.index))//Index route
+    .post(isLoggedIn, validateListing, wrapAsync(listingControlller.createListing))//create route
 
 
 //new route- place this above show route
-router.get("/new", isLoggedIn, (req, res) => {
-    // console.log(req.user);// undefined if not logged in
-
-    res.render("listings/new.ejs")
-})
+router.get("/new", isLoggedIn, listingControlller.renderNewForm)
 
 
-
-//show route
-router.get("/:id", wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id).populate({ path: "reviews", populate: { path: "author" } }).populate('owner');
-    //populate method is used to sent review object
-    if (!listing) {
-
-        req.flash("error", "Listing you requested for doest not exist!")
-        res.redirect('/listings')
-    }
-    // console.log(listing)
-    res.render("listings/show.ejs", { listing })
+router.route("/:id")
+    .get(wrapAsync(listingControlller.showListing))//show route
+    .put(isLoggedIn, isOwner, validateListing, wrapAsync(listingControlller.updateListing))//update route 
+    .delete(isLoggedIn, isOwner, wrapAsync(listingControlller.destroyListing));
 
 
-}))
-
-
-//create route
-router.post("/", isLoggedIn, validateListing, wrapAsync(async (req, res, next) => {
-    // if (!req.body.listing) {
-    //     throw new ExpressError(400, "Send valid data for listing")
-    // }
-    //earlierly we were using above method to validate but we had to do that for every key(price,location etc), middleware is better way using Joi
-
-    const newlisting = Listing(req.body.listing);
-    // console.log("This is new listing", koreq.user._id)
-    newlisting.owner = req.user._id;//store userid as owner (current logged in user) using passport
-    await newlisting.save();
-    req.flash("success", "New listing created")
-    res.redirect("/listings")
-
-}))
-
-
-//edit route
-router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id);
-    if (!listing) {
-        req.flash("error", "Listing you requested for doest not exist!")
-        res.redirect('/listings')
-    }
-    res.render("listings/edit.ejs", { listing })
-
-
-}))
-
-
-//update route 
-//we will first check if user is logged in then check if user is owner of particular listing then procced with update
-router.put("/:id", isLoggedIn, isOwner, validateListing, wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const data = req.body.listing;
-
-    let listing = await Listing.findById(id);
-
-
-    listing.title = data.title;
-    listing.description = data.description;
-    listing.price = data.price;
-    listing.location = data.location;
-    listing.country = data.country;
-
-    if (data.image) {
-        listing.image = {
-            url: data.image,
-            filename: "listingimage" // optional, or generate dynamically
-        };
-    }
-
-    await listing.save();
-    req.flash("success", "Listing Updated")
-    res.redirect(`/listings/${id}`);
-}));
-
-
-//delete route
-router.delete("/:id", isLoggedIn, isOwner, wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    let deletedListing = await Listing.findByIdAndDelete(id);
-    console.log("Deleted", deletedListing);
-    req.flash("success", "Listing Deleted")
-    res.redirect("/listings");
-
-}))
+router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingControlller.renderEditForm))//edit route
 
 module.exports = router; 
