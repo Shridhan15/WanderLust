@@ -50,7 +50,7 @@ module.exports.renderEditForm = async (req, res) => {
         res.redirect('/listings')
     }
     let originalImageUrl = listing.image.url;
-    // blue the image while shoing original image in edit form
+    // blur the image while shoing original image in edit form
     originalImageUrl = originalImageUrl.replace('/upload', '/upload/w_250')
     res.render("listings/edit.ejs", { listing, originalImageUrl })
 
