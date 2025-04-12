@@ -1,4 +1,9 @@
 <% layout("/layouts/boilerplate.ejs") %>
+<script>
+  latitude= <%- JSON.stringify(listing.latitude) %>
+  longitude= <%- JSON.stringify(listing.longitude) %>
+</script>
+
 <div class="row">
   <div class="col-8 offset-3 mt-3">
     <h3><b><%= listing.title %></b> <br /></h3>
@@ -22,14 +27,14 @@
     </div>
   </div>
 
-  <!-- show edit and delete button if logged is user is owner of post, currentUser is stored in locals in app.js -->
+  <!-- Show edit and delete button if logged-in user is the owner of the post -->
   <% if(currentUser && currentUser._id.equals(listing.owner._id )) {%>
   <div class="btns">
     <a
       href="/listings/<%=listing._id%>/edit"
       class="btn btn-dark col-1 edit-btn offset-3"
-      >Edit
-    </a>
+      >Edit</a
+    >
 
     <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
       <button class="btn btn-dark offset-5">Delete</button>
@@ -38,9 +43,9 @@
   <% } %>
 
   <div class="col-8 offset-3">
-    <hr />
-    <!-- add review only if user is logged in, this is for frontend we have to protect this for backed also -->
+    <!-- Add review only if the user is logged in -->
     <% if(currentUser) {%>
+    <hr />
     <h4>Leave a Review</h4>
     <form
       action="/listings/<%= listing.id %>/reviews"
@@ -113,10 +118,13 @@
       <button class="btn btn-outline-dark">Submit</button>
     </form>
     <hr />
-    <% } %> <% if (listing.reviews.length> 0) { %>
+    <% } %>
+
+    <!-- Show reviews if any exist -->
+    <% if (listing.reviews.length > 0) { %>
     <div class="row">
       <p><b>All Reviews</b></p>
-      <% for (review of listing.reviews){ %>
+      <% for (review of listing.reviews) { %>
       <div class="card col-5 ms-3 mb-3">
         <div class="card-body">
           <h5 class="card-title">@<%= review.author.username %></h5>
@@ -134,9 +142,33 @@
           <button class="btn btn-small btn-dark mb-3">Delete</button>
         </form>
       </div>
-
       <% } %>
     </div>
     <% } %>
+    <!-- Only show the map if latitude and longitude are available -->
+    <% if (listing.latitude && listing.longitude) { %>
+    <div
+      style="
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <h3>Location Map</h3>
+      <div
+        class="mb-5"
+        id="map"
+        style="height: 400px; width: 800px; border-radius: 10px"
+      ></div>
+    </div>
+
+    <% } %>
   </div>
 </div>
+
+<!-- Pass latitude and longitude to the external JS file -->
+
+<!-- Link to the external map.js file -->
+<script src="/js/map.js"></script>

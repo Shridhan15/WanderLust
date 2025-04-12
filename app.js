@@ -44,9 +44,9 @@ const sessionOptions = {
         httpOnly: true,
     }
 };
-app.get("/", (req, res) => {
-    res.send("Hii, i an root")
-})
+// app.get("/", (req, res) => {
+//     res.send("Hii, i an root")
+// })
 
 app.use(session(sessionOptions))//to check if session is working, inspect and look for connect.side in application 
 app.use(flash())
