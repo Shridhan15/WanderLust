@@ -1,8 +1,10 @@
 <% layout("/layouts/boilerplate.ejs") %>
-<script>
-  latitude= <%- JSON.stringify(listing.latitude) %>
-  longitude= <%- JSON.stringify(listing.longitude) %>
-</script>
+
+<!-- Leaflet CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+/>
 
 <div class="row">
   <div class="col-8 offset-3 mt-3">
@@ -27,7 +29,6 @@
     </div>
   </div>
 
-  <!-- Show edit and delete button if logged-in user is the owner of the post -->
   <% if(currentUser && currentUser._id.equals(listing.owner._id )) {%>
   <div class="btns">
     <a
@@ -35,7 +36,6 @@
       class="btn btn-dark col-1 edit-btn offset-3"
       >Edit</a
     >
-
     <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
       <button class="btn btn-dark offset-5">Delete</button>
     </form>
@@ -43,7 +43,6 @@
   <% } %>
 
   <div class="col-8 offset-3">
-    <!-- Add review only if the user is logged in -->
     <% if(currentUser) {%>
     <hr />
     <h4>Leave a Review</h4>
@@ -63,7 +62,6 @@
             name="review[rating]"
             value="1"
             checked
-            aria-label="No rating."
           />
           <input
             type="radio"
@@ -118,10 +116,7 @@
       <button class="btn btn-outline-dark">Submit</button>
     </form>
     <hr />
-    <% } %>
-
-    <!-- Show reviews if any exist -->
-    <% if (listing.reviews.length > 0) { %>
+    <% } %> <% if (listing.reviews.length > 0) { %>
     <div class="row">
       <p><b>All Reviews</b></p>
       <% for (review of listing.reviews) { %>
@@ -144,9 +139,7 @@
       </div>
       <% } %>
     </div>
-    <% } %>
-    <!-- Only show the map if latitude and longitude are available -->
-    <% if (listing.latitude && listing.longitude) { %>
+    <% } %> <% if (listing.latitude && listing.longitude) { %>
     <div
       style="
         text-align: center;
@@ -163,12 +156,18 @@
         style="height: 400px; width: 800px; border-radius: 10px"
       ></div>
     </div>
-
     <% } %>
   </div>
 </div>
 
-<!-- Pass latitude and longitude to the external JS file -->
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-<!-- Link to the external map.js file -->
+<!-- Pass latitude and longitude to JS -->
+<script>
+  const latitude = <%- JSON.stringify(listing.latitude || 0) %>;
+  const longitude = <%- JSON.stringify(listing.longitude || 0) %>;
+</script>
+
+<!-- Custom map logic -->
 <script src="/js/map.js"></script>
