@@ -1,7 +1,8 @@
 const NodeGeocoder = require('node-geocoder');
 
 const options = {
-  provider: 'openstreetmap', // free and no API key needed
+  provider: 'opencage',
+  apiKey: process.env.OPENCAGE_API_KEY,
 };
 
 const geocoder = NodeGeocoder(options);
