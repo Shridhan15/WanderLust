@@ -1,5 +1,4 @@
 const Listing = require("../models/listing")
-const geocoder = require('../utils/geocoder');
 
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find({});
@@ -37,13 +36,6 @@ module.exports.createListing = async (req, res, next) => {
     const newlisting = Listing(req.body.listing);
     // console.log("This is new listing", koreq.user._id)
     newlisting.owner = req.user._id;//store userid as owner (current logged in user) using passport
-
-    // mapping
-    const geoData = await geocoder.geocode(req.body.listing.location);
-    if (geoData.length) {
-        newlisting.latitude = geoData[0].latitude;
-        newlisting.longitude = geoData[0].longitude;
-    }
 
     newlisting.image = { url, filename }
     await newlisting.save();

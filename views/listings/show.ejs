@@ -139,35 +139,6 @@
       </div>
       <% } %>
     </div>
-    <% } %> <% if (listing.latitude && listing.longitude) { %>
-    <div
-      style="
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      "
-    >
-      <h3>Location Map</h3>
-      <div
-        class="mb-5"
-        id="map"
-        style="height: 400px; width: 800px; border-radius: 10px"
-      ></div>
-    </div>
     <% } %>
   </div>
 </div>
-
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-<!-- Pass latitude and longitude to JS -->
-<script>
-  const latitude = <%- JSON.stringify(listing.latitude || 0) %>;
-  const longitude = <%- JSON.stringify(listing.longitude || 0) %>;
-</script>
-
-<!-- Custom map logic -->
-<script src="/js/map.js"></script>
