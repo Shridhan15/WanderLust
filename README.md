@@ -36,3 +36,18 @@
 git clone https://github.com/Shridhan15/WanderLust.git
 cd WanderLust
 npm install
+
+WanderLust/
+├── controllers/      # Route handlers
+├── models/           # Mongoose schemas
+├── routes/           # Express routes
+├── views/            # EJS templates
+├── public/           # Static assets (CSS, JS, Images)
+├── utils/            # Utility functions
+├── middleware.js     # Custom middleware
+├── cloudConfig.js    # Cloudinary configuration
+├── app.js            # Main entry point
+└── package.json
+<img width="1888" height="913" alt="image" src="https://github.com/user-attachments/assets/a23adb87-f87f-469e-a55e-09b01259bdca" />
+
+
