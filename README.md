@@ -47,7 +47,7 @@ WanderLust/
 ├── middleware.js     # Custom middleware
 ├── cloudConfig.js    # Cloudinary configuration
 ├── app.js            # Main entry point
-└── package.json
-<img width="1888" height="913" alt="image" src="https://github.com/user-attachments/assets/a23adb87-f87f-469e-a55e-09b01259bdca" />
+└── package.json 
+
 
 
